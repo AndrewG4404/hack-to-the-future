@@ -4,84 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historical Event</title>
-    <style>
-        /* Importing a vintage-looking serif font for a more authentic newspaper feel */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-        
-        body {
-            font-family: 'Playfair Display', serif;
-            background-color: #f2e6d4;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 40px;
-            background-image: url('https://www.transparenttextures.com/patterns/old-paper.png');
-        }
-        .event-container {
-            background-color: rgba(255, 250, 240, 0.95);
-            border: 1px solid #b3a28b;
-            box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
-            width: 100%;
-            margin: 20px;
-            padding: 30px;
-            border-radius: 5px;
-            line-height: 1.8;
-            font-size: 1.1em;
-        }
-        .event-title {
-            font-size: 2.8em;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            color: #2e2e2e;
-            border-bottom: 2px solid #b3a28b;
-            padding-bottom: 10px;
-            font-style: italic;
-        }
-        .event-image {
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            height: auto;
-            border: 2px solid #b3a28b;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
-            filter: sepia(40%);
-        }
-        .event-details {
-            margin-top: 20px;
-            color: #333;
-        }
-        .event-details h3 {
-            font-size: 1.4em;
-            margin-bottom: 8px;
-            color: #555;
-            text-transform: uppercase;
-            border-bottom: 1px solid #b3a28b;
-        }
-        .event-description {
-            margin-top: 20px;
-            font-style: italic;
-            color: #4d4d4d;
-        }
-        .column-style {
-            border-left: 3px solid #b3a28b;
-            padding-left: 15px;
-            margin-top: 15px;
-        }
-        /* Adding a vintage footer for a realistic touch */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #777;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
-<body>
+<body class="layout-body">
 
     <div class="event-container">
         <h1 class="event-title">[Event Title Here]</h1>
@@ -104,6 +29,5 @@
     <div class="footer">
         © Historical Archives | All Rights Reserved
     </div>
-
 </body>
 </html>

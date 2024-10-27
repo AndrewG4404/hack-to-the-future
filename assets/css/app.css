@@ -442,7 +442,7 @@ h1, h2 {
     font-family: 'Digital-7';
     src: url('Images/digital-7.ttf') format('truetype');
 }
-body {
+.body {
     font-family: 'Digital-7', sans-serif;
     display: flex;
     justify-content: center;
@@ -658,7 +658,7 @@ body {
 /* Importing a vintage-looking serif font for a more authentic newspaper feel */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
         
-body {
+.layout-body {
     font-family: 'Playfair Display', serif;
     background-color: #f2e6d4;
     color: #333;
