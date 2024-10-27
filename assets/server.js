@@ -63,13 +63,10 @@ app.get('/event', (req, res) => {
       }
       res.json(results[0]); // returns the event object, including id
   });
+
 });
-
-
-
-// Existing search-event and event-page endpoints
 
 // Start the server
 app.listen(port, () => {
-  console.log('Server running on http://localhost:${port}');
+  console.log(`Server running on http://localhost:${port}`);
 });
