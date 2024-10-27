@@ -28,15 +28,16 @@ db.connect(err => {
 });
 
 // Endpoint to search for existing event
+// Endpoint to search for an existing event by date only
 app.post('/search-event', (req, res) => {
-  const { event_name, year, month, day, location, historical_figures } = req.body;
+  const { year, month, day } = req.body;
 
   const query = `
     SELECT * FROM HistoricalEvents
-    WHERE event_name = ? AND year = ? AND month = ? AND day = ?
+    WHERE year = ? AND month = ? AND day = ?
   `;
 
-  db.query(query, [event_name, year, month, day], (err, results) => {
+  db.query(query, [year, month, day], (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -50,7 +51,6 @@ app.post('/search-event', (req, res) => {
     }
   });
 });
-
 
 // Endpoint to fetch event details by ID
 app.get('/event-page/:id', (req, res) => {
@@ -75,11 +75,12 @@ app.get('/event-page/:id', (req, res) => {
             <link rel="stylesheet" href="app.css">
         </head>
         <body>
+            <h1>${event.event_name}</h1>
+
             <!-- Back to Form link -->
             <a href="http://127.0.0.1:5500/">Back to Form</a>
-
-            <h1>${event.event_name}</h1>
-            <p><strong>Date:</strong> ${event.year}-${event.month}-${event.day}</p>
+            
+            <p><strong>Date:</strong> ${event.month}/${event.day}/${event.year}</p>
             <p><strong>Location:</strong> ${event.location}</p>
             <p><strong>Historical Figures:</strong> ${event.historical_figures}</p>
         </body>
