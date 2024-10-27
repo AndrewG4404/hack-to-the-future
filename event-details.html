@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Details</title>
+</head>
+<body>
+    <div id="event-container">
+        <h1>Event Details</h1>
+        <p><strong>Event Name:</strong> <span id="event-name"></span></p>
+        <p><strong>Location:</strong> <span id="event-location"></span></p>
+        <p><strong>Historical Figures:</strong> <span id="event-figures"></span></p>
+    </div>
+
+    <script>
+        // Get date and time parameters from URL or form input
+const year = getQueryParam('year');
+const month = getQueryParam('month');
+const day = getQueryParam('day');
+const hour = getQueryParam('hour');
+const minute = getQueryParam('minute');
+
+if (year && month && day && hour && minute) {
+    fetchEventData(year, month, day, hour, minute);
+}
+
+async function fetchEventData(year, month, day, hour, minute) {
+    try {
+        const response = await fetch(`http://localhost:3000/event?year=${year}&month=${month}&day=${day}&hour=${hour}&minute=${minute}`);
+        if (response.ok) {
+            const eventData = await response.json();
+            document.getElementById('event-name').textContent = eventData.event_name;
+            document.getElementById('event-location').textContent = eventData.location;
+            document.getElementById('event-figures').textContent = eventData.historical_figures;
+        } else {
+            console.error("Event not found.");
+        }
+    } catch (error) {
+        console.error('Error fetching event data:', error);
+    }
+}
+
+    </script>
+</body>
+</html>

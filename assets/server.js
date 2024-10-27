@@ -1,17 +1,16 @@
+// Import required libraries and configure server
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// Enable CORS
+// Enable CORS and parse JSON request bodies
 app.use(cors());
-app.use(express.json()); // Parse JSON-formatted request bodies
-
-// Serve static files from the "public" directory
+app.use(express.json());
 app.use(express.static('public'));
 
-// MySQL database connection
+// Configure database connection
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -27,84 +26,48 @@ db.connect(err => {
   console.log('Connected to database.');
 });
 
-// Endpoint to search for existing event
-// Endpoint to search for an existing event by date only
-app.post('/search-event', (req, res) => {
-  const { year, month, day } = req.body;
+// Endpoint to add a new event
+app.post('/add-event', (req, res) => {
+  const { event_name, year, month, day, hour, minute, location, historical_figures } = req.body;
 
   const query = `
-    SELECT * FROM HistoricalEvents
-    WHERE year = ? AND month = ? AND day = ?
+    INSERT INTO HistoricalEvents (event_name, year, month, day, hour, minute, location, historical_figures)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(query, [year, month, day], (err, results) => {
+  db.query(query, [event_name, year, month, day, hour, minute, location, historical_figures], (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-
-    if (results.length > 0) {
-      // Return the found event data
-      res.json({ event: results[0] });
-    } else {
-      // If no event found, return a message indicating so
-      res.status(404).json({ message: 'Event not found.' });
-    }
+    res.status(200).json({ message: 'Event successfully added!', eventId: results.insertId });
   });
 });
 
-// Endpoint to fetch event details by ID
-app.get('/event-page/:id', (req, res) => {
-  const eventId = req.params.id;
-  const query = 'SELECT * FROM HistoricalEvents WHERE id = ?';
 
-  db.query(query, [eventId], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
+// Endpoint to get event details by ID
+app.get('/event', (req, res) => {
+  const { year, month, day, hour, minute } = req.query;
 
-    if (results.length > 0) {
-      // Serve an HTML page with the event details
-      const event = results[0];
-      res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Event Details</title>
-            <link rel="stylesheet" href="app.css">
-        </head>
-        <body>
-            <h1>${event.event_name}</h1>
+  const query = `
+      SELECT id, event_name, location, historical_figures 
+      FROM HistoricalEvents 
+      WHERE year = ? AND month = ? AND day = ? AND hour = ? AND minute = ?
+  `;
 
-            <!-- Back to Form link -->
-            <a href="http://127.0.0.1:5500/">Back to Form</a>
-            
-            <p><strong>Date:</strong> ${event.month}/${event.day}/${event.year}</p>
-            <p><strong>Location:</strong> ${event.location}</p>
-            <p><strong>Historical Figures:</strong> ${event.historical_figures}</p>
-        </body>
-        </html>
-      `);
-    } else {
-      res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Event Not Found</title>
-        </head>
-        <body>
-            <h1>Event Not Found</h1>
-            <p>The event you are looking for does not exist in the database.</p>
-            <a href="/">Back to Form</a>
-        </body>
-        </html>
-      `);
-    }
+  db.query(query, [year, month, day, hour, minute], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ error: 'Event not found' });
+      }
+      res.json(results[0]); // returns the event object, including `id`
   });
 });
+
+
+
+// Existing search-event and event-page endpoints
 
 // Start the server
 app.listen(port, () => {
