@@ -30,8 +30,8 @@ db.connect(err => {
 app.post('/add-event', (req, res) => {
   const { event_name, year, month, day, hour, minute, location, historical_figures } = req.body;
 
-  const query = `
-    INSERT INTO HistoricalEvents (event_name, year, month, day, hour, minute, location, historical_figures)
+  const query = 
+    `INSERT INTO HistoricalEvents (event_name, year, month, day, hour, minute, location, historical_figures)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -48,8 +48,8 @@ app.post('/add-event', (req, res) => {
 app.get('/event', (req, res) => {
   const { year, month, day, hour, minute } = req.query;
 
-  const query = `
-      SELECT id, event_name, location, historical_figures 
+  const query = 
+      `SELECT id, event_name, location, historical_figures 
       FROM HistoricalEvents 
       WHERE year = ? AND month = ? AND day = ? AND hour = ? AND minute = ?
   `;
@@ -61,7 +61,7 @@ app.get('/event', (req, res) => {
       if (results.length === 0) {
           return res.status(404).json({ error: 'Event not found' });
       }
-      res.json(results[0]); // returns the event object, including `id`
+      res.json(results[0]); // returns the event object, including id
   });
 });
 
@@ -71,5 +71,5 @@ app.get('/event', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log('Server running on http://localhost:${port}');
 });
