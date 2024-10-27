@@ -13,33 +13,51 @@
     </div>
 
     <script>
-        // Get date and time parameters from URL or form input
-const year = getQueryParam('year');
-const month = getQueryParam('month');
-const day = getQueryParam('day');
-const hour = getQueryParam('hour');
-const minute = getQueryParam('minute');
-
-if (year && month && day && hour && minute) {
-    fetchEventData(year, month, day, hour, minute);
-}
-
-async function fetchEventData(year, month, day, hour, minute) {
-    try {
-        const response = await fetch(`http://localhost:3000/event?year=${year}&month=${month}&day=${day}&hour=${hour}&minute=${minute}`);
-        if (response.ok) {
-            const eventData = await response.json();
-            document.getElementById('event-name').textContent = eventData.event_name;
-            document.getElementById('event-location').textContent = eventData.location;
-            document.getElementById('event-figures').textContent = eventData.historical_figures;
-        } else {
-            console.error("Event not found.");
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
-    } catch (error) {
-        console.error('Error fetching event data:', error);
-    }
-}
 
+        // Get date and time parameters from URL or form input
+        let year = getQueryParam('year');
+        let month = getQueryParam('month');
+        let day = getQueryParam('day');
+        let hour = getQueryParam('hour');
+        let minute = getQueryParam('minute');
+        let amPm = getQueryParam('amPm');
+
+        if (year && month && day && hour && minute && amPm) {
+            hour = parseInt(hour, 10);
+            if (amPm == 'PM' && hour < 12) {
+                hour += 12;
+            } else if (amPm == 'AM' && hour == 12) {
+                hour = 0;
+            }
+            fetchEventData(year, month, day, hour, minute);
+        } else {
+            document.getElementById('event-container').innerHTML = '<p>Error: Missing date or time parameters.</p>'
+        }
+
+        async function fetchEventData(year, month, day, hour, minute) {
+            try {
+                const response = await fetch(`http://localhost:3000/event?year=${year}&month=${month}&day=${day}&hour=${hour}&minute=${minute}`);
+                if (response.ok) {
+                    const eventData = await response.json();
+                    document.getElementById('event-name').textContent = eventData.event_name;
+                    document.getElementById('event-location').textContent = eventData.location;
+                    document.getElementById('event-figures').textContent = eventData.historical_figures;
+                } else if (response.status == 404) {
+                    document.getElementById('event-container').innerHTML = '<p>No event found for the specified date and time.</p>';
+                } else {
+                    document.getElementById('event-container').innerHTML = '<p>Error fetching event data.</p>'
+                }
+            } catch (error) {
+                console.error('Error fetching event data: ', error);
+                document.getElementById('event-container').innerHTML = '<p>Error fetching event data.</p>'
+            }
+        }
+
+        console.log('Query Parameters:', { year, month, day, hour, minute, amPm });
     </script>
 </body>
 </html>
